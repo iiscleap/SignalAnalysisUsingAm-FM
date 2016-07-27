@@ -1,0 +1,46 @@
+***************************************************************************
+Author : Sriram Ganapathy
+http://www.clsp.jhu.edu/~sriram/index.html
+ganapathy@jhu.edu
+
+Reference: S. Ganapathy, P. Motlicek and H. Hermansky, "Autoregressive Models Of Amplitude Modulations In Audio Compression", IEEE Transactions on Audio, Speech and Language Processing, Aug. 2010. 
+
+Copyright 2010 by Johns Hopkins University and Idiap Research Institute
+http://www.idiap.ch & http://www.jhu.edu
+
+See the file COPYING.TXT for the licence associated with this software.
+***************************************************************************
+
+The folder contains matlab files for using FDLP decomposition operated on 32 QMF bands with a analysis window of 1s. 
+The code allows to resynthesize with carrier or envelope information alone. With envelope information alone the re-synthesized signal sounds whispered. With the carrier part alone, the synthesized signal sounds message less. Interstingly, the amount of speechiness in the output can be controlled by the model order.
+
+----------------------------------------------------------------------------------
+			Main Function 
+----------------------------------------------------------------------------------
+code_decode_new.m - Performs QMF analysis, FDLP decomposition, Processing, QMF resynthesis.
+
+To run the code, Matlab signal processing toolbox is needed.
+
+How to run in matlab -
+
+[A,Fs]= wavread('clean.wav');
+figure; plot(A);
+C_res = code_decode_new(A,Fs,30,1,0);
+figure; plot(C_res);
+
+The output can be saved using wavwrite and listenned to.
+Also one can use revb.wav to analyze the effect of reverberation in FDLP modelling.
+
+---------------------------------------------------------------------------------
+			Sub-functions
+---------------------------------------------------------------------------------
+
+QMF_7_analysis_W_bark_mod.m ---
+Function to perform the QMF analysis with low delay and with sharp transistion bandwidth. Output contains a cell array with size (7,64) with outputs from each stage in a 6 stage binary decomposition into 64 bands. Appropiate bands can be chosen to obtain 32 bands which are non-uniform.
+
+analysis_fdlp_burg.m --- 
+Function to perform the  Auto-regressive modelling of Hilbert Envelopes. The modelling is done by computing the analytic signal for the given input signal. The analytic signal is given as input to Yule-Walker spectral estimation technique which outputs the AR estimate of the HIlbert Envelope of the signal. 
+
+QMF_7_synthesis_W_bark_mod.m ---
+Sub-band synthesis to obtain the fullband signal from the sub-bands.
+
